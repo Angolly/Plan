@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>重启人生</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #6366f1;
+            --secondary: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius: 8px;
+        }
+
+        body {
+            background-color: #f9fafb;
+            color: var(--gray-900);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--gray-700);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-700);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .tab:hover {
+            color: var(--primary);
+        }
+
+        .tab.active {
+            color: var(--primary);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .month-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .month-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .month-btn:hover {
+            background: var(--primary-light);
+        }
+
+        .current-month {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .task-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .task-form {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--gray-700);
+        }
+
+        input, select {
+            padding: 10px 12px;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            align-self: flex-end;
+        }
+
+        .btn:hover {
+            background: var(--primary-light);
+        }
+
+        .btn-success {
+            background: var(--secondary);
+        }
+
+        .btn-success:hover {
+            background: #0da271;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background-color: var(--gray-200);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .calendar-header {
+            background-color: var(--gray-100);
+            padding: 12px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .calendar-day {
+            background-color: white;
+            padding: 12px;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .day-number {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 5px;
+        }
+
+        .day-number.today {
+            color: var(--primary);
+        }
+
+        .task-in-day {
+            padding: 6px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: white;
+            cursor: pointer;
+            transition: opacity 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .task-in-day:hover {
+            opacity: 0.9;
+        }
+
+        .task-check {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+
+        .task-check.checked {
+            background: rgba(255, 255, 255, 0.8);
+            color: green;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .stat-title {
+            font-size: 0.9rem;
+            color: var(--gray-700);
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .finance-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .finance-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .finance-card h3 {
+            font-size: 1.1rem;
+            color: var(--gray-700);
+            margin-bottom: 10px;
+        }
+
+        .balance-amount {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .income-amount {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .expense-amount {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--danger);
+        }
+
+        .record-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .record-list {
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .record-item {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 15px;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--gray-200);
+            align-items: center;
+        }
+
+        .record-item:last-child {
+            border-bottom: none;
+        }
+
+        .record-desc {
+            font-weight: 500;
+        }
+
+        .record-category {
+            font-size: 0.85rem;
+            color: var(--gray-700);
+            margin-top: 4px;
+        }
+
+        .record-amount {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .record-income {
+            color: var(--secondary);
+        }
+
+        .record-expense {
+            color: var(--danger);
+        }
+
+        .record-date {
+            font-size: 0.85rem;
+            color: var(--gray-700);
+        }
+
+        .delete-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .delete-btn:hover {
+            background: #dc2626;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray-700);
+        }
+
+        .empty-state h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .task-colors {
+            display: flex;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .color-option {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .color-option.selected {
+            border-color: var(--gray-900);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--radius);
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-700);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--gray-200);
+            color: var(--gray-700);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .calendar {
+                grid-template-columns: repeat(7, 1fr);
+            }
+            
+            .calendar-day {
+                padding: 8px 4px;
+                min-height: 90px;
+            }
+            
+            .day-number {
+                font-size: 1rem;
+            }
+            
+            .task-in-day {
+                padding: 4px;
+                font-size: 0.7rem;
+            }
+            
+            .record-item {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>重启人生</h1>
+        <p class="subtitle">专注于当下，每月设定新目标，记录成长与财务，重启你的人生旅程</p>
+    </header>
+
+    <div class="tabs">
+        <button class="tab active" data-tab="tasks">月度任务</button>
+        <button class="tab" data-tab="finance">资金管理</button>
+    </div>
+
+    <!-- 任务管理标签页 -->
+    <div id="tasks-tab" class="tab-content active">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">本月任务管理</h2>
+                <button class="btn" id="show-completed-tasks">查看已完成</button>
+            </div>
+            
+            <div class="month-selector">
+                <button class="month-btn" id="prev-month">←</button>
+                <div class="current-month" id="current-month">2024年1月</div>
+                <button class="month-btn" id="next-month">→</button>
+            </div>
+
+            <form id="task-form" class="task-form">
+                <div class="form-group">
+                    <label for="task-name">任务名称</label>
+                    <input type="text" id="task-name" placeholder="例如：每日阅读30分钟" required>
+                </div>
+                <div class="form-group">
+                    <label for="task-duration">持续时间（天数）</label>
+                    <input type="number" id="task-duration" min="1" max="31" value="7" required>
+                </div>
+                <div class="form-group">
+                    <label>任务颜色</label>
+                    <div class="task-colors">
+                        <div class="color-option selected" style="background-color: #4f46e5;" data-color="#4f46e5"></div>
+                        <div class="color-option" style="background-color: #10b981;" data-color="#10b981"></div>
+                        <div class="color-option" style="background-color: #f59e0b;" data-color="#f59e0b"></div>
+                        <div class="color-option" style="background-color: #ef4444;" data-color="#ef4444"></div>
+                        <div class="color-option" style="background-color: #8b5cf6;" data-color="#8b5cf6"></div>
+                    </div>
+                </div>
+                <button type="submit" class="btn">添加任务</button>
+            </form>
+
+            <div id="calendar-container"></div>
+
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-title">本月任务总数</div>
+                    <div class="stat-value" id="total-tasks">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">已完成打卡天数</div>
+                    <div class="stat-value" id="completed-days">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">本月进度</div>
+                    <div class="stat-value" id="month-progress">0%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 资金管理标签页 -->
+    <div id="finance-tab" class="tab-content">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">资金管理</h2>
+            </div>
+
+            <div class="finance-summary">
+                <div class="finance-card">
+                    <h3>当前余额</h3>
+                    <div class="balance-amount" id="current-balance">¥0.00</div>
+                </div>
+                <div class="finance-card">
+                    <h3>本月收入</h3>
+                    <div class="income-amount" id="month-income">¥0.00</div>
+                </div>
+                <div class="finance-card">
+                    <h3>本月支出</h3>
+                    <div class="expense-amount" id="month-expense">¥0.00</div>
+                </div>
+            </div>
+
+            <form id="record-form" class="record-form">
+                <div class="form-group">
+                    <label for="record-type">类型</label>
+                    <select id="record-type">
+                        <option value="income">收入</option>
+                        <option value="expense" selected>支出</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="record-amount">金额</label>
+                    <input type="number" id="record-amount" placeholder="0.00" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="record-description">描述</label>
+                    <input type="text" id="record-description" placeholder="例如：购物、工资" required>
+                </div>
+                <button type="submit" class="btn">添加记录</button>
+            </form>
+
+            <div class="record-list" id="record-list">
+                <!-- 资金记录会动态添加到这里 -->
+                <div class="empty-state" id="empty-finance">
+                    <h3>暂无资金记录</h3>
+                    <p>添加您的第一笔收入或支出记录</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 已完成任务弹窗 -->
+    <div class="modal" id="completed-tasks-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">已完成任务</h3>
+                <button class="close-modal" id="close-completed-modal">×</button>
+            </div>
+            <div id="completed-tasks-list"></div>
+        </div>
+    </div>
+
+    <footer>
+        <p>重启人生 - 专注于当下，记录成长 | 数据保存在本地浏览器中</p>
+    </footer>
+
+    <script>
+        // 应用状态管理
+        const AppState = {
+            currentDate: new Date(),
+            currentMonth: null,
+            currentYear: null,
+            selectedColor: '#4f46e5',
+            tasks: [],
+            financialRecords: []
+        };
+
+        // 颜色选项
+        const colorOptions = document.querySelectorAll('.color-option');
+        colorOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                colorOptions.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+                AppState.selectedColor = option.dataset.color;
+            });
+        });
+
+        // 标签切换功能
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // 移除所有标签的活动状态
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // 添加当前标签的活动状态
+                tab.classList.add('active');
+                document.getElementById(`${tab.dataset.tab}-tab`).classList.add('active');
+            });
+        });
+
+        // 初始化月份显示
+        function initMonth() {
+            AppState.currentMonth = AppState.currentDate.getMonth();
+            AppState.currentYear = AppState.currentDate.getFullYear();
+            updateMonthDisplay();
+            loadTasks();
+            loadFinancialRecords();
+            renderCalendar();
+        }
+
+        // 更新月份显示
+        function updateMonthDisplay() {
+            const monthNames = ["1月", "2月", "3月", "4月", "5月", "6月", 
+                               "7月", "8月", "9月", "10月", "11月", "12月"];
+            document.getElementById('current-month').textContent = 
+                `${AppState.currentYear}年${monthNames[AppState.currentMonth]}`;
+        }
+
+        // 月份切换功能
+        document.getElementById('prev-month').addEventListener('click', () => {
+            AppState.currentDate.setMonth(AppState.currentDate.getMonth() - 1);
+            initMonth();
+        });
+
+        document.getElementById('next-month').addEventListener('click', () => {
+            AppState.currentDate.setMonth(AppState.currentDate.getMonth() + 1);
+            initMonth();
+        });
+
+        // 加载任务数据
+        function loadTasks() {
+            const savedTasks = localStorage.getItem(`tasks_${AppState.currentYear}_${AppState.currentMonth}`);
+            AppState.tasks = savedTasks ? JSON.parse(savedTasks) : [];
+            updateTaskStats();
+        }
+
+        // 保存任务数据
+        function saveTasks() {
+            localStorage.setItem(`tasks_${AppState.currentYear}_${AppState.currentMonth}`, JSON.stringify(AppState.tasks));
+            updateTaskStats();
+        }
+
+        // 任务表单提交
+        document.getElementById('task-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const taskName = document.getElementById('task-name').value;
+            const duration = parseInt(document.getElementById('task-duration').value);
+            
+            // 计算任务开始日期（从今天开始）
+            const today = new Date();
+            const startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            const endDate = new Date(startDate);
+            endDate.setDate(startDate.getDate() + duration - 1);
+            
+            // 创建新任务
+            const newTask = {
+                id: Date.now(),
+                name: taskName,
+                startDate: startDate.toISOString().split('T')[0],
+                endDate: endDate.toISOString().split('T')[0],
+                color: AppState.selectedColor,
+                completedDays: []
+            };
+            
+            AppState.tasks.push(newTask);
+            saveTasks();
+            renderCalendar();
+            
+            // 重置表单
+            document.getElementById('task-form').reset();
+            document.getElementById('task-duration').value = 7;
+        });
+
+        // 渲染日历
+        function renderCalendar() {
+            const container = document.getElementById('calendar-container');
+            const today = new Date();
+            const todayStr = today.toISOString().split('T')[0];
+            
+            // 获取当前月的第一天和最后一天
+            const firstDay = new Date(AppState.currentYear, AppState.currentMonth, 1);
+            const lastDay = new Date(AppState.currentYear, AppState.currentMonth + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const firstDayOfWeek = firstDay.getDay(); // 0 = 周日
+            
+            // 星期标题
+            const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+            let calendarHTML = '<div class="calendar">';
+            
+            // 添加星期标题
+            weekdays.forEach(day => {
+                calendarHTML += `<div class="calendar-header">${day}</div>`;
+            });
+            
+            // 添加空白单元格（如果月份不是从周日开始）
+            for (let i = 0; i < firstDayOfWeek; i++) {
+                calendarHTML += '<div class="calendar-day empty"></div>';
+            }
+            
+            // 添加日期单元格
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(AppState.currentYear, AppState.currentMonth, day);
+                const dateStr = date.toISOString().split('T')[0];
+                const isToday = dateStr === todayStr;
+                
+                // 获取当天的任务
+                const dayTasks = AppState.tasks.filter(task => {
+                    const taskStart = new Date(task.startDate);
+                    const taskEnd = new Date(task.endDate);
+                    return date >= taskStart && date <= taskEnd;
+                });
+                
+                calendarHTML += `<div class="calendar-day" data-date="${dateStr}">`;
+                calendarHTML += `<div class="day-number ${isToday ? 'today' : ''}">${day}</div>`;
+                
+                // 添加任务
+                dayTasks.forEach(task => {
+                    const isCompleted = task.completedDays.includes(dateStr);
+                    calendarHTML += `
+                        <div class="task-in-day" style="background-color: ${task.color};" 
+                             data-task-id="${task.id}" data-date="${dateStr}">
+                            <span>${task.name}</span>
+                            <div class="task-check ${isCompleted ? 'checked' : ''}">
+                                ${isCompleted ? '✓' : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                calendarHTML += '</div>';
+            }
+            
+            calendarHTML += '</div>';
+            container.innerHTML = calendarHTML;
+            
+            // 为任务添加点击事件（打卡）
+            document.querySelectorAll('.task-in-day').forEach(taskElement => {
+                taskElement.addEventListener('click', function() {
+                    const taskId = parseInt(this.dataset.taskId);
+                    const date = this.dataset.date;
+                    toggleTaskCompletion(taskId, date);
+                });
+            });
+        }
+
+        // 切换任务完成状态
+        function toggleTaskCompletion(taskId, date) {
+            const task = AppState.tasks.find(t => t.id === taskId);
+            if (!task) return;
+            
+            const index = task.completedDays.indexOf(date);
+            if (index === -1) {
+                // 添加打卡
+                task.completedDays.push(date);
+            } else {
+                // 取消打卡
+                task.completedDays.splice(index, 1);
+            }
+            
+            saveTasks();
+            renderCalendar();
+        }
+
+        // 更新任务统计
+        function updateTaskStats() {
+            const totalTasks = AppState.tasks.length;
+            
+            // 计算已完成打卡天数
+            let completedDays = 0;
+            AppState.tasks.forEach(task => {
+                completedDays += task.completedDays.length;
+            });
+            
+            // 计算进度（基于当月天数）
+            const today = new Date();
+            const daysInMonth = new Date(AppState.currentYear, AppState.currentMonth + 1, 0).getDate();
+            const currentDay = AppState.currentYear === today.getFullYear() && 
+                              AppState.currentMonth === today.getMonth() ? 
+                              today.getDate() : daysInMonth;
+            
+            const maxPossibleCompletions = totalTasks * currentDay;
+            const progress = maxPossibleCompletions > 0 ? 
+                Math.round((completedDays / maxPossibleCompletions) * 100) : 0;
+            
+            document.getElementById('total-tasks').textContent = totalTasks;
+            document.getElementById('completed-days').textContent = completedDays;
+            document.getElementById('month-progress').textContent = `${progress}%`;
+        }
+
+        // 查看已完成任务
+        document.getElementById('show-completed-tasks').addEventListener('click', () => {
+            showCompletedTasksModal();
+        });
+
+        // 显示已完成任务弹窗
+        function showCompletedTasksModal() {
+            const modal = document.getElementById('completed-tasks-modal');
+            const listContainer = document.getElementById('completed-tasks-list');
+            
+            let completedTasksHTML = '';
+            
+            AppState.tasks.forEach(task => {
+                if (task.completedDays.length > 0) {
+                    completedTasksHTML += `
+                        <div class="record-item" style="border-left: 4px solid ${task.color};">
+                            <div>
+                                <div class="record-desc">${task.name}</div>
+                                <div class="record-category">已完成 ${task.completedDays.length} 天</div>
+                            </div>
+                            <div>
+                                ${task.completedDays.map(date => {
+                                    const d = new Date(date);
+                                    return `${d.getMonth()+1}/${d.getDate()}`;
+                                }).join(', ')}
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            
+            if (completedTasksHTML === '') {
+                completedTasksHTML = '<p class="empty-state">暂无已完成任务</p>';
+            }
+            
+            listContainer.innerHTML = completedTasksHTML;
+            modal.classList.add('active');
+        }
+
+        // 关闭已完成任务弹窗
+        document.getElementById('close-completed-modal').addEventListener('click', () => {
+            document.getElementById('completed-tasks-modal').classList.remove('active');
+        });
+
+        // 点击弹窗外部关闭弹窗
+        document.getElementById('completed-tasks-modal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('completed-tasks-modal')) {
+                document.getElementById('completed-tasks-modal').classList.remove('active');
+            }
+        });
+
+        // 资金管理功能
+        function loadFinancialRecords() {
+            const savedRecords = localStorage.getItem(`finance_${AppState.currentYear}_${AppState.currentMonth}`);
+            AppState.financialRecords = savedRecords ? JSON.parse(savedRecords) : [];
+            updateFinanceDisplay();
+        }
+
+        function saveFinancialRecords() {
+            localStorage.setItem(`finance_${AppState.currentYear}_${AppState.currentMonth}`, JSON.stringify(AppState.financialRecords));
+            updateFinanceDisplay();
+        }
+
+        function updateFinanceDisplay() {
+            // 计算余额、收入和支出
+            let balance = 0;
+            let income = 0;
+            let expense = 0;
+            
+            AppState.financialRecords.forEach(record => {
+                if (record.type === 'income') {
+                    balance += record.amount;
+                    income += record.amount;
+                } else {
+                    balance -= record.amount;
+                    expense += record.amount;
+                }
+            });
+            
+            // 更新显示
+            document.getElementById('current-balance').textContent = `¥${balance.toFixed(2)}`;
+            document.getElementById('month-income').textContent = `¥${income.toFixed(2)}`;
+            document.getElementById('month-expense').textContent = `¥${expense.toFixed(2)}`;
+            
+            // 更新记录列表
+            renderFinancialRecords();
+        }
+
+        function renderFinancialRecords() {
+            const container = document.getElementById('record-list');
+            const emptyState = document.getElementById('empty-finance');
+            
+            if (AppState.financialRecords.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            let recordsHTML = '';
+            
+            // 按日期排序（最新的在前）
+            const sortedRecords = [...AppState.financialRecords].sort((a, b) => {
+                return new Date(b.date) - new Date(a.date);
+            });
+            
+            sortedRecords.forEach(record => {
+                const date = new Date(record.date);
+                const dateStr = `${date.getMonth()+1}/${date.getDate()} ${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
+                
+                recordsHTML += `
+                    <div class="record-item">
+                        <div>
+                            <div class="record-desc">${record.description}</div>
+                            <div class="record-category">${record.type === 'income' ? '收入' : '支出'}</div>
+                        </div>
+                        <div class="record-amount ${record.type === 'income' ? 'record-income' : 'record-expense'}">
+                            ${record.type === 'income' ? '+' : '-'}¥${record.amount.toFixed(2)}
+                        </div>
+                        <div class="record-date">${dateStr}</div>
+                        <button class="delete-btn" data-record-id="${record.id}">删除</button>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = recordsHTML;
+            
+            // 为删除按钮添加事件
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const recordId = parseInt(this.dataset.recordId);
+                    deleteFinancialRecord(recordId);
+                });
+            });
+        }
+
+        // 资金记录表单提交
+        document.getElementById('record-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const type = document.getElementById('record-type').value;
+            const amount = parseFloat(document.getElementById('record-amount').value);
+            const description = document.getElementById('record-description').value;
+            
+            if (isNaN(amount) || amount <= 0) {
+                alert('请输入有效的金额');
+                return;
+            }
+            
+            const newRecord = {
+                id: Date.now(),
+                type: type,
+                amount: amount,
+                description: description,
+                date: new Date().toISOString()
+            };
+            
+            AppState.financialRecords.push(newRecord);
+            saveFinancialRecords();
+            
+            // 重置表单
+            document.getElementById('record-form').reset();
+            document.getElementById('record-type').value = 'expense';
+        });
+
+        function deleteFinancialRecord(recordId) {
+            const index = AppState.financialRecords.findIndex(record => record.id === recordId);
+            if (index !== -1) {
+                AppState.financialRecords.splice(index, 1);
+                saveFinancialRecords();
+            }
+        }
+
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', () => {
+            initMonth();
+            
+            // 为今天日期添加高亮（如果今天在当前显示的月份中）
+            const today = new Date();
+            if (today.getFullYear() === AppState.currentYear && today.getMonth() === AppState.currentMonth) {
+                // 日历中今天的日期会有特殊样式
+            }
+        });
+    </script>
+</body>
+</html>
